@@ -3,27 +3,24 @@ import { FiEdit3, FiTrash } from 'react-icons/fi';
 
 import { Container } from './styles';
 import api from '../../services/api';
+import { IFood } from '../../type';
 
-class Food extends Component {
-  constructor(props) {
-    super(props);
+interface IFoodPropsComponents{
+  food:IFood,
+  handleDelete: (id: number) => void,
+  handleEditFood: (food:IFood) => void
+}
 
-    const { available } = this.props.food;
-    this.state = {
-      isAvailable: available
-    };
-  }
-
-  toggleAvailable = async () => {
-    const { food } = this.props;
-    const { isAvailable } = this.state;
+function Food({}:IFoodPropsComponents){
+  
+   async function toggleAvailable(){
 
     await api.put(`/foods/${food.id}`, {
       ...food,
-      available: !isAvailable,
+      available: !food.isAvailable,
     });
 
-    this.setState({ isAvailable: !isAvailable });
+    // setFoods(food);
   }
 
   setEditingFood = () => {
@@ -77,7 +74,7 @@ class Food extends Component {
                 id={`available-switch-${food.id}`}
                 type="checkbox"
                 checked={isAvailable}
-                onChange={this.toggleAvailable}
+                onChange={toggleAvailable(food)}
                 data-testid={`change-status-food-${food.id}`}
               />
               <span className="slider" />
